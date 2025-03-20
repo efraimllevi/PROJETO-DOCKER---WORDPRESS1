@@ -1,52 +1,205 @@
-PROJETO-DOCKER---WORDPRESS
-Documentação para Instalação do WordPress no Docker com Amazon Linux
+Exemplo básico de um README.md:
+markdown
+Copiar
+# Projeto Docker WordPress
 
-Esta documentação descreve como configurar o WordPress em uma instância EC2 com Amazon Linux utilizando Docker. Além disso, configura-se um Elastic Load Balancer (ELB) da AWS para balancear a carga entre as instâncias EC2 que executam o WordPress, garantindo alta disponibilidade e escalabilidade.
+Este projeto descreve como configurar o WordPress no Docker com Amazon Linux 2 e balanceamento de carga com Elastic Load Balancer (ELB) da AWS.
 
-Pré-requisitos Conta na AWS. Instância Amazon Linux 2 EC2 criada. Acesso SSH à instância. Docker instalado na instância EC2. Elastic Load Balancer (ELB) configurado para distribuir o tráfego. Banco de dados MySQL configurado, pode ser usado Amazon RDS ou MySQL local. Domínio configurado (opcional) para associar ao Load Balancer. Passo 1: Preparar a Instância EC2 com Amazon Linux Conectar à Instância EC2 via SSH:
+## Pré-requisitos
 
-Abra o terminal no seu computador. Conecte-se à sua instância EC2 usando o comando SSH: bash Copiar ssh -i /caminho/para/sua-chave.pem ec2-user@<IP-da-sua-instância> Atualizar o Sistema:
+- Conta na **AWS**
+- Instância EC2 com **Amazon Linux 2**
+- Docker instalado na instância
+- Elastic Load Balancer (ELB) configurado
+- Banco de dados MySQL (Amazon RDS ou local)
 
-Execute o seguinte comando para garantir que todos os pacotes estejam atualizados: bash Copiar sudo yum update -y Instalar o Docker:
+## Passos de Configuração
 
-Instale o Docker na instância EC2 usando os seguintes comandos: bash Copiar sudo amazon-linux-extras enable docker sudo yum install docker -y sudo service docker start sudo usermod -aG docker ec2-user Verificar o Status do Docker:
+### 1. Preparação da Instância EC2
+- Conectar via **SSH** à instância EC2
+- Instalar o **Docker**
+  
+### 2. Configuração do Banco de Dados MySQL
+- Criar instância **Amazon RDS** para o banco MySQL
+- Configurar as permissões de acesso
 
-Verifique se o Docker está em funcionamento com o comando: bash Copiar sudo systemctl status docker Reiniciar a Instância EC2 (se necessário):
+### 3. Configuração do Docker para WordPress e MySQL
+- Utilizar **Docker Compose** para orquestrar os contêineres
+- Criar arquivo `docker-compose.yml`
 
-Caso a adição do usuário ao grupo Docker não tenha sido efetivada, faça logout e login novamente ou reinicie a instância EC2. Passo 2: Configurar o Banco de Dados MySQL Neste exemplo, vamos usar o Amazon RDS para o banco de dados do WordPress.
+### 4. Elastic Load Balancer (ELB)
+- Criar um **Application Load Balancer (ALB)**
+- Registrar as instâncias EC2 no **Target Group**
 
-Criar uma Instância RDS com MySQL:
+## Considerações Finais
 
-Acesse o AWS Management Console. Vá para o serviço RDS e crie uma instância do banco de dados MySQL. Defina as configurações do banco, como nome do banco de dados, usuário e senha. Certifique-se de configurar o Grupo de Segurança para permitir conexões da sua instância EC2. Obter o Endpoint do Banco de Dados:
+- **Segurança**: Configurar **Security Groups** adequados
+- **Escalabilidade**: Escalonamento automático com **Elastic Load Balancer**
+- **Backup**: Configuração de backups automáticos
 
-Após a criação da instância RDS, copie o endpoint da instância para usar na configuração do WordPress. Passo 3: Criar e Configurar o Docker para WordPress Baixar e Executar o Docker Compose:
+## Links Úteis
 
-Vamos usar o Docker Compose para orquestrar o WordPress e o banco de dados MySQL em containers separados. Baixe o Docker Compose: bash Copiar sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose sudo chmod +x /usr/local/bin/docker-compose Criar o arquivo docker-compose.yml:
+- [Link para a documentação oficial da AWS](https://docs.aws.amazon.com/)
+- [Link para Docker Compose](https://docs.docker.com/compose/)
+2. Estrutura de Títulos e Subtítulos
+Use títulos e subtítulos para organizar o conteúdo de forma clara. O Markdown oferece uma hierarquia de títulos usando #:
 
-Na sua instância EC2, crie um diretório para o projeto WordPress e acesse-o: bash Copiar mkdir ~/wordpress-docker cd ~/wordpress-docker Crie um arquivo chamado docker-compose.yml e adicione o seguinte conteúdo: yaml Copiar version: '3.1'
+# para o título principal (h1)
+## para subtítulos (h2)
+### para subtítulos de nível 3 (h3)
+Exemplo:
 
-services: wordpress: image: wordpress:latest restart: always ports: - "80:80" environment: WORDPRESS_DB_HOST: :3306 WORDPRESS_DB_NAME: wordpress WORDPRESS_DB_USER: WORDPRESS_DB_PASSWORD: networks: - wordpress-network
+markdown
+Copiar
+# Instalação do WordPress com Docker
+## Passos de Configuração
+### 1. Preparação da Instância EC2
+3. Listas
+Você pode criar listas ordenadas (numeradas) e não ordenadas (com marcadores) para facilitar a leitura:
 
-mysql: image: mysql:5.7 restart: always environment: MYSQL_ROOT_PASSWORD: MYSQL_DATABASE: wordpress networks: - wordpress-network
+Listas não ordenadas:
 
-networks: wordpress-network: driver: bridge Substitua os seguintes valores:
+markdown
+Copiar
+- Item 1
+- Item 2
+- Item 3
+Listas ordenadas:
 
-: O endpoint do banco de dados MySQL no Amazon RDS. e : O nome de usuário e senha do banco de dados MySQL. Iniciar os Containers:
+markdown
+Copiar
+1. Primeiro passo
+2. Segundo passo
+3. Terceiro passo
+4. Links e Referências
+Você pode adicionar links e referências externas para facilitar a navegação:
 
-Execute o comando abaixo para iniciar o WordPress e o MySQL no Docker:
+markdown
+Copiar
+[Texto do link](URL)
+Exemplo:
 
-bash Copiar sudo docker-compose up -d Verifique se os containers estão funcionando:
+markdown
+Copiar
+- [Documentação do Docker](https://docs.docker.com/)
+- [Amazon RDS Documentation](https://docs.aws.amazon.com/rds/)
+5. Imagens
+Imagens também podem ser inseridas de forma simples com o Markdown:
 
-bash Copiar sudo docker ps Passo 4: Configurar o Elastic Load Balancer (ELB) Criar um Elastic Load Balancer:
+markdown
+Copiar
+![Texto alternativo](URL-da-imagem)
+Exemplo:
 
-Acesse o Console da AWS e vá para o serviço EC2. No menu à esquerda, clique em Load Balancers e em seguida, clique em Create Load Balancer. Selecione Application Load Balancer (ALB). Configure as opções de rede e selecione o VPC onde as instâncias EC2 estão localizadas. Configurar o Listener:
+markdown
+Copiar
+![Arquitetura Docker WordPress](https://link-da-imagem.com)
+6. Código
+Para adicionar trechos de código, use os backticks (`). Para blocos de código maiores, use três backticks (```).
 
-Para a comunicação HTTP, o Listener deve estar configurado na porta 80. Se quiser HTTPS, adicione outro Listener na porta 443 e associe um certificado SSL. Registrar Instâncias no Target Group:
+Exemplo de código em linha:
 
-No ALB, crie um Target Group para registrar as instâncias EC2. Registre as instâncias EC2 com o WordPress em execução no Target Group. Configure a verificação de saúde para garantir que o tráfego seja direcionado apenas para instâncias saudáveis. Testar o Load Balancer:
+markdown
+Copiar
+O comando para rodar o Docker é `docker-compose up -d`.
+Exemplo de bloco de código:
 
-Após configurar o ALB, você terá um DNS público associado ao Load Balancer. Acesse o DNS e verifique se o WordPress está sendo servido corretamente. Passo 5: Finalizando a Instalação e Testes Acessar o WordPress:
+markdown
+Copiar
+```bash
+sudo yum update -y
+sudo yum install docker -y
+sudo service docker start
+css
+Copiar
 
-Após configurar o Load Balancer, use o DNS fornecido pelo ALB para acessar o WordPress através de um navegador. Finalize a instalação do WordPress, configurando o site, o tema e os plugins. Escalabilidade:
+### 7. **Tabelas**
+Tabelas podem ser usadas para organizar dados de forma visual. A sintaxe para uma tabela é a seguinte:
 
-Adicione mais instâncias EC2 ao grupo de destino do ALB, conforme necessário, para aumentar a capacidade e garantir alta disponibilidade. Considerações Finais Segurança: Certifique-se de configurar segurança de rede adequadamente, usando Security Groups para proteger o acesso às instâncias EC2 e ao banco de dados. Escalabilidade: A configuração com Elastic Load Balancer (ELB) permite escalar o WordPress facilmente, distribuindo o tráfego entre múltiplas instâncias EC2. Backup: Não se esqueça de configurar backups automáticos para os dados do WordPress e para o banco de dados no Amazon RDS.
+```markdown
+| Coluna 1 | Coluna 2 | Coluna 3 |
+|----------|----------|----------|
+| Linha 1  | Dados 1  | Dados 2  |
+| Linha 2  | Dados 3  | Dados 4  |
+Exemplo:
+
+markdown
+Copiar
+| Comando        | Descrição              | Exemplo                         |
+|----------------|------------------------|---------------------------------|
+| `yum update`   | Atualizar pacotes       | `sudo yum update -y`            |
+| `docker run`   | Executar contêiner      | `docker run -d -p 80:80 wordpress`|
+8. Destaques e Ênfases
+Você pode usar negrito e itálico para destacar informações importantes:
+
+Negrito: **texto**
+Itálico: *texto*
+Negrito e Itálico: **_texto_**
+Exemplo:
+
+markdown
+Copiar
+A instância **EC2** precisa estar configurada corretamente para garantir que o **WordPress** funcione sem problemas.
+9. Blocos de Citação
+Para destacar citações, você pode usar o >:
+
+markdown
+Copiar
+> Lembre-se de sempre realizar backups antes de realizar alterações significativas no banco de dados.
+10. Melhorando a Leitura e a Apresentação
+Você pode adicionar espaçamento entre as seções para melhorar a leitura:
+
+markdown
+Copiar
+# Título
+
+Texto aqui.
+
+---
+
+# Outro Título
+
+Mais texto.
+11. Exemplo Final de README.md
+markdown
+Copiar
+# Projeto Docker WordPress
+
+Este projeto descreve como configurar o WordPress no Docker com Amazon Linux 2 e balanceamento de carga com Elastic Load Balancer (ELB) da AWS.
+
+## Pré-requisitos
+
+- Conta na **AWS**
+- Instância EC2 com **Amazon Linux 2**
+- Docker instalado na instância
+- Elastic Load Balancer (ELB) configurado
+- Banco de dados MySQL (Amazon RDS ou local)
+
+## Passos de Configuração
+
+### 1. Preparação da Instância EC2
+- Conectar via **SSH** à instância EC2
+- Instalar o **Docker**
+  
+### 2. Configuração do Banco de Dados MySQL
+- Criar instância **Amazon RDS** para o banco MySQL
+- Configurar as permissões de acesso
+
+### 3. Configuração do Docker para WordPress e MySQL
+- Utilizar **Docker Compose** para orquestrar os contêineres
+- Criar arquivo `docker-compose.yml`
+
+### 4. Elastic Load Balancer (ELB)
+- Criar um **Application Load Balancer (ALB)**
+- Registrar as instâncias EC2 no **Target Group**
+
+## Considerações Finais
+
+- **Segurança**: Configurar **Security Groups** adequados
+- **Escalabilidade**: Escalonamento automático com **Elastic Load Balancer**
+- **Backup**: Configuração de backups automáticos para o banco de dados
+
+## Links Úteis
+
+- [Link para a documentação oficial da AWS](https://docs.aws.amazon.com/)
+- [Link para Docker Compose](https://docs.docker.com/compose/)
